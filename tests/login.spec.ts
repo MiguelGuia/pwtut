@@ -5,6 +5,7 @@ test('successful login with correct credentials', async ({ page }) => {
   const url = 'https://demo-bank.vercel.app/';
   const userId = 'testerLO';
   const userPassword = '10987654';
+  const expectedName = 'Jan Demobankowy';
 
   //Act
   await page.goto(url);
@@ -13,22 +14,39 @@ test('successful login with correct credentials', async ({ page }) => {
   await page.getByTestId('login-button').click();
 
   //Assert
-  await expect(page.getByTestId('user-name')).toHaveText('Jan Demobankowy');
+  await expect(page.getByTestId('user-name')).toHaveText(`${expectedName}`);
 });
 test('unsuccessful login with too short username', async ({ page }) => {
-  await page.goto('https://demo-bank.vercel.app/');
-  await page.getByTestId('login-input').fill('tester');
+  //arrange
+  const url = 'https://demo-bank.vercel.app/';
+  const wrongUserId = 'tester';
+  const userPassword = '10987654';
+  const expectedResult = 'identyfikator ma min. 8 znaków';
+
+  //act
+  await page.goto(url);
+  await page.getByTestId('login-input').fill(wrongUserId);
   await page.getByTestId('password-input').click();
+
+  //assert
   await expect(page.getByTestId('error-login-id')).toHaveText(
-    'identyfikator ma min. 8 znaków',
+    `${expectedResult}`,
   );
 });
 test('unsuccessful login with too short password', async ({ page }) => {
-  await page.goto('https://demo-bank.vercel.app/');
-  await page.getByTestId('login-input').fill('testerLO');
-  await page.getByTestId('password-input').fill('1234');
+  //arrange
+  const url = 'https://demo-bank.vercel.app/';
+  const userId = 'testerLO';
+  const wrongPassword = '1234';
+  const expectedResult = 'hasło ma min. 8 znaków';
+
+  //act
+  await page.goto(url);
+  await page.getByTestId('login-input').fill(userId);
+  await page.getByTestId('password-input').fill(wrongPassword);
   await page.getByTestId('password-input').blur();
+  //assert
   await expect(page.getByTestId('error-login-password')).toHaveText(
-    'hasło ma min. 8 znaków',
+    `${expectedResult}`,
   );
 });
