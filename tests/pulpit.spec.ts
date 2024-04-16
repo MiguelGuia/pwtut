@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/login.data';
+
 test.describe('Pulpit tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
   test('quick payment with correct data', async ({ page }) => {
-    
     //Arrange
     const url = 'https://demo-bank.vercel.app/';
-    const userId = 'testerLO';
-    const userPassword = '10987654';
+    const userId = loginData.userId;
+    const userPassword = loginData.password;
 
     const transferAmount = '150';
     const transferTitle = 'pizza';
@@ -13,7 +17,6 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
 
     //Act
-    await page.goto(url);
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(userPassword);
     await page.getByTestId('login-button').click();
@@ -28,18 +31,16 @@ test.describe('Pulpit tests', () => {
     await expect(page.locator('#show_messages')).toHaveText(expectedMessage);
   });
   test('Boosting you account balance', async ({ page }) => {
-
     //arrange
     const url = 'https://demo-bank.vercel.app/';
-    const userId = 'testerLO';
-    const userPassword = '10987654';
+    const userId = loginData.userId;
+    const userPassword = loginData.password;
 
     const topupAmount = '50';
     const expectedNumber = '500 xxx xxx';
     const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${expectedNumber}`;
 
     //act
-    await page.goto(url);
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(userPassword);
     await page.getByTestId('login-button').click();
@@ -70,5 +71,4 @@ test.describe('Pulpit tests', () => {
     // Assert
     await expect(page.locator('#money_value')).toHaveText(`${expectedBalance}`);
   });
-
 });
