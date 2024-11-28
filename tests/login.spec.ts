@@ -12,7 +12,7 @@ test.describe('User login to Demobank', () => {
     const expectedName = 'Jan Demobankowy';
 
     //Act
-    await page.goto('/');
+
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(userPassword);
     await page.getByTestId('login-button').click();
@@ -27,7 +27,7 @@ test.describe('User login to Demobank', () => {
     const expectedResult = 'identyfikator ma min. 8 znaków';
 
     //act
-    await page.goto('/');
+
     await page.getByTestId('login-input').fill(wrongUserId);
     await page.getByTestId('password-input').click();
 
@@ -44,7 +44,7 @@ test.describe('User login to Demobank', () => {
     const expectedResult = 'hasło ma min. 8 znaków';
 
     //act
-    await page.goto('/');
+
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(wrongPassword);
     await page.getByTestId('password-input').blur();
