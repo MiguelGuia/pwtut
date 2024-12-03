@@ -20,40 +20,38 @@ test.describe('User login to Demobank', () => {
     await loginPage.loginButton.click();
 
     //Assert
-    await expect(page.getByTestId('user-name')).toHaveText(`${expectedName}`);
+    await expect(loginPage.user_name).toHaveText(`${expectedName}`);
   });
+
   test('unsuccessful login with too short username', async ({ page }) => {
     //arrange
 
-    const wrongUserId = 'tester';
-    const expectedResult = 'identyfikator ma min. 8 znaków';
+    const incorrectUserId = 'tester';
+    const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
 
     //act
-
-    await page.getByTestId('login-input').fill(wrongUserId);
-    await page.getByTestId('password-input').click();
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(incorrectUserId);
+    await loginPage.passwordInput.click();
 
     //assert
-    await expect(page.getByTestId('error-login-id')).toHaveText(
-      `${expectedResult}`,
-    );
+    await expect(loginPage.loginError).toHaveText(`${expectedErrorMessage}`);
   });
   test('unsuccessful login with too short password', async ({ page }) => {
     //arrange
 
     const userId = loginData.userId;
-    const wrongPassword = '1234';
-    const expectedResult = 'hasło ma min. 8 znaków';
+    const incorrectPassword = '1234';
+    const expectedErrorMessage = 'hasło ma min. 8 znaków';
 
     //act
 
-    await page.getByTestId('login-input').fill(userId);
-    await page.getByTestId('password-input').fill(wrongPassword);
-    await page.getByTestId('password-input').blur();
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(userId);
+    await loginPage.passwordInput.fill(incorrectPassword);
+    await loginPage.passwordInput.blur(); //blur symuluje klikniecie w dowolne inne miejsce, uruchamia walidacje
 
     //assert
-    await expect(page.getByTestId('error-login-password')).toHaveText(
-      `${expectedResult}`,
-    );
+    await expect(loginPage.passwordError).toHaveText(expectedErrorMessage);
   });
 });

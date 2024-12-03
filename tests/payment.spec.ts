@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
+import { PaymentPage } from '../pages/payment.page';
 
 test.describe('Payment tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,11 +10,14 @@ test.describe('Payment tests', () => {
 
     await page.goto('/');
     const loginPage = new LoginPage(page);
+    const paymentPage = new PaymentPage(page);
+
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
-    await page.getByRole('link', { name: 'płatności' }).click();
+    await paymentPage.payments.click();
   });
+
   test('simple payment', async ({ page }) => {
     //arrange
     const transferReceiver = 'Jan Nowak';
@@ -22,15 +26,17 @@ test.describe('Payment tests', () => {
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
 
     //act
-    await page.getByTestId('transfer_receiver').fill(transferReceiver);
-    await page.getByTestId('form_account_to').fill(transferAccount);
-    await page.getByTestId('form_amount').click();
+    const paymentPage = new PaymentPage(page);
 
-    await page.getByTestId('form_amount').fill(transferAmount);
-    await page.getByRole('button', { name: 'wykonaj przelew' }).click();
-    await page.getByTestId('close-button').click();
+    await paymentPage.transfer_receiver.fill(transferReceiver);
+    await paymentPage.form_account_to.fill(transferAccount);
+    await paymentPage.form_amount.click();
+
+    await paymentPage.form_amount.fill(transferAmount);
+    await paymentPage.wykonaj_przelew.click();
+    await paymentPage.close_button.click();
 
     //assert
-    await expect(page.locator('#show_messages')).toHaveText(expectedMessage);
+    await expect(paymentPage.show_messages).toHaveText(expectedMessage);
   });
 });
