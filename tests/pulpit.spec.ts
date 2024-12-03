@@ -4,12 +4,15 @@ import { LoginPage } from '../pages/login.page';
 import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('Pulpit tests', () => {
+  let loginPage: LoginPage;
+  let pulpitPage: PulpitPage;
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
+    pulpitPage = new PulpitPage(page);
 
     await page.goto('/');
-    const loginPage = new LoginPage(page);
+    loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
@@ -22,8 +25,6 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
 
     //Act
-    const pulpitPage = new PulpitPage(page);
-
     await pulpitPage.widget_transfer_receiver.selectOption('2');
     await pulpitPage.widget_transfer_amount.fill(transferAmount);
     await pulpitPage.widget_transfer_title.fill(transferTitle);
@@ -40,8 +41,6 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${expectedNumber}`;
 
     //act
-
-    const pulpitPage = new PulpitPage(page);
     await pulpitPage.widget_topup_receiver.selectOption('500 xxx xxx');
     await pulpitPage.widget_topup_amount.fill(topupAmount);
     await pulpitPage.uniform_widget_topup_agreement_span.click();
@@ -59,8 +58,6 @@ test.describe('Pulpit tests', () => {
     const expectedBalance = Number(initialBalance) - Number(topUpAmount);
 
     // Act
-    const pulpitPage = new PulpitPage(page);
-
     await pulpitPage.widget_topup_receiver.selectOption(topUpReceiver);
     await pulpitPage.widget_topup_amount.fill(topUpAmount);
     await pulpitPage.uniform_widget_topup_agreement_span.click();

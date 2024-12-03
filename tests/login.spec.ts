@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
+import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('User login to Demobank', () => {
+  let loginPage: LoginPage;
   test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
     await page.goto('/');
   });
   test('successful login with correct credentials', async ({ page }) => {
@@ -14,10 +17,7 @@ test.describe('User login to Demobank', () => {
 
     //Act
 
-    const loginPage = new LoginPage(page);
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userId, userPassword);
 
     //Assert
     await expect(loginPage.user_name).toHaveText(`${expectedName}`);
@@ -30,7 +30,7 @@ test.describe('User login to Demobank', () => {
     const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
 
     //act
-    const loginPage = new LoginPage(page);
+
     await loginPage.loginInput.fill(incorrectUserId);
     await loginPage.passwordInput.click();
 
@@ -46,7 +46,6 @@ test.describe('User login to Demobank', () => {
 
     //act
 
-    const loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(incorrectPassword);
     await loginPage.passwordInput.blur(); //blur symuluje klikniecie w dowolne inne miejsce, uruchamia walidacje
