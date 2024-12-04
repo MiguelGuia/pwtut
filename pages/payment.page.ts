@@ -20,4 +20,16 @@ export class PaymentPage {
     this.show_messages = this.page.locator('#show_messages');
     this.sideMenuComponent = new SideMenuComponent(this.page);
   }
+  async makeTransfer(
+    transferReceiver: string,
+    transferAmount: string,
+    transferAccount: string,
+  ): Promise<void> {
+    await this.transfer_receiver.fill(transferReceiver);
+    await this.form_account_to.fill(transferAccount);
+
+    await this.form_amount.fill(transferAmount);
+    await this.wykonaj_przelew.click();
+    await this.close_button.click();
+  }
 }

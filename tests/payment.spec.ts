@@ -31,16 +31,13 @@ test.describe('Payment tests', () => {
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
 
     //act
-    const paymentPage = new PaymentPage(page);
+    paymentPage = new PaymentPage(page);
 
-    await paymentPage.transfer_receiver.fill(transferReceiver);
-    await paymentPage.form_account_to.fill(transferAccount);
-    await paymentPage.form_amount.click();
-
-    await paymentPage.form_amount.fill(transferAmount);
-    await paymentPage.wykonaj_przelew.click();
-    await paymentPage.close_button.click();
-
+    await paymentPage.makeTransfer(
+      transferReceiver,
+      transferAmount,
+      transferAccount,
+    );
     //assert
     await expect(paymentPage.show_messages).toHaveText(expectedMessage);
   });
