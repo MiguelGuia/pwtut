@@ -25,27 +25,20 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
 
     //Act
-    await pulpitPage.widget_transfer_receiver.selectOption('2');
-    await pulpitPage.widget_transfer_amount.fill(transferAmount);
-    await pulpitPage.widget_transfer_title.fill(transferTitle);
-    await pulpitPage.wykonaj_button.click();
-    await pulpitPage.close_button.click();
+
+    await pulpitPage.executeQuickPayment(transferAmount, transferTitle);
 
     //Assert
     await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
   });
-  test('Boosting you account balance', async ({ page }) => {
+  test.only('Boosting you account balance', async ({ page }) => {
     //arrange
     const topupAmount = '50';
-    const expectedNumber = '500 xxx xxx';
-    const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${expectedNumber}`;
+    const topUpReceiver = '500 xxx xxx';
+    const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${topUpReceiver}`;
 
     //act
-    await pulpitPage.widget_topup_receiver.selectOption('500 xxx xxx');
-    await pulpitPage.widget_topup_amount.fill(topupAmount);
-    await pulpitPage.uniform_widget_topup_agreement_span.click();
-    await pulpitPage.doladuj_telefon.click();
-    await pulpitPage.close_button.click();
+    await pulpitPage.executeMobileTopUp(topUpReceiver, topupAmount);
 
     //assert
     await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
@@ -58,11 +51,7 @@ test.describe('Pulpit tests', () => {
     const expectedBalance = Number(initialBalance) - Number(topUpAmount);
 
     // Act
-    await pulpitPage.widget_topup_receiver.selectOption(topUpReceiver);
-    await pulpitPage.widget_topup_amount.fill(topUpAmount);
-    await pulpitPage.uniform_widget_topup_agreement_span.click();
-    await pulpitPage.doladuj_telefon.click();
-    await pulpitPage.close_button.click();
+    await pulpitPage.executeMobileTopUp(topUpReceiver, topUpAmount);
 
     // Assert
     await expect(page.locator('#money_value')).toHaveText(`${expectedBalance}`);

@@ -36,4 +36,25 @@ export class PulpitPage {
     this.money_value = page.locator('#money_value');
     this.sideMenuComponent = new SideMenuComponent(this.page);
   }
+
+  async executeQuickPayment(
+    transferAmount: string,
+    transferTitle: string,
+  ): Promise<void> {
+    await this.widget_transfer_receiver.selectOption('2');
+    await this.widget_transfer_amount.fill(transferAmount);
+    await this.widget_transfer_title.fill(transferTitle);
+    await this.wykonaj_button.click();
+    await this.close_button.click();
+  }
+  async executeMobileTopUp(
+    topUpReceiver: string,
+    topUpAmount: string,
+  ): Promise<void> {
+    await this.widget_topup_receiver.selectOption(topUpReceiver);
+    await this.widget_topup_amount.fill(topUpAmount);
+    await this.uniform_widget_topup_agreement_span.click();
+    await this.doladuj_telefon.click();
+    await this.close_button.click();
+  }
 }
