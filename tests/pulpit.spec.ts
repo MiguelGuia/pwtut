@@ -17,7 +17,9 @@ test.describe('Pulpit tests', () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
   });
-  test('quick payment with correct data', async ({ page }) => {
+  test('quick payment with correct data @pulpit @integration', async ({
+    page,
+  }) => {
     //Arrange
     const transferAmount = '150';
     const transferTitle = 'pizza';
@@ -31,7 +33,9 @@ test.describe('Pulpit tests', () => {
     //Assert
     await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
   });
-  test.only('Boosting you account balance', async ({ page }) => {
+  test('Boosting you account balance @pulpit @integration', async ({
+    page,
+  }) => {
     //arrange
     const topupAmount = '50';
     const topUpReceiver = '500 xxx xxx';
@@ -43,7 +47,9 @@ test.describe('Pulpit tests', () => {
     //assert
     await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
   });
-  test('correct balance after successful mobile top-up', async ({ page }) => {
+  test('correct balance after successful mobile top-up @pulpit @integration', async ({
+    page,
+  }) => {
     // Arrange
     const topUpReceiver = '500 xxx xxx';
     const topUpAmount = '50';
