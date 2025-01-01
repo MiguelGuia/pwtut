@@ -17,22 +17,30 @@ test.describe('Pulpit tests', () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
   });
-  test('quick payment with correct data @pulpit @integration', async ({
-    page,
-  }) => {
-    //Arrange
-    const transferAmount = '150';
-    const transferTitle = 'pizza';
-    const expectedTransferReceiver = 'Chuck Demobankowy';
-    const expectedMessage = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
+  test(
+    'quick payment with correct data @pulpit @integration',
+    {
+      tag: ['@payment', '@integration'],
+      annotation: {
+        type: 'documentation',
+        description: 'https://jaktestowac.pl/course/playwright-wprowadzenie/',
+      },
+    },
+    async ({ page }) => {
+      //Arrange
+      const transferAmount = '150';
+      const transferTitle = 'pizza';
+      const expectedTransferReceiver = 'Chuck Demobankowy';
+      const expectedMessage = `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`;
 
-    //Act
+      //Act
 
-    await pulpitPage.executeQuickPayment(transferAmount, transferTitle);
+      await pulpitPage.executeQuickPayment(transferAmount, transferTitle);
 
-    //Assert
-    await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
-  });
+      //Assert
+      await expect(pulpitPage.show_messages).toHaveText(expectedMessage);
+    },
+  );
   test('Boosting you account balance @pulpit @integration', async ({
     page,
   }) => {
